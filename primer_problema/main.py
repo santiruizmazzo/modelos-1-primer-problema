@@ -34,11 +34,12 @@ def cargar_problema_desde_archivo():
           prendas.append((int(palabras[1]), int(palabras[2])))
     
     prendas.sort(reverse=True, key=lambda e: e[1])
-    # print(prendas)
-    pprint.pprint(incompatibilidades)
+    return prendas, incompatibilidades
 
 def main() -> None:
-  cargar_problema_desde_archivo()
+  prendas, incompatibilidades = cargar_problema_desde_archivo()
+  pprint.pprint(prendas)
+  # pprint.pprint(incompatibilidades)
 
 if __name__ == "__main__":
   main()

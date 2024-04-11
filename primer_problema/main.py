@@ -38,13 +38,6 @@ def cargar_problema_desde_archivo():
     pprint.pprint(incompatibilidades)
 
 def main() -> None:
-  # incompatibilidades = set([])
-  # incompatibilidades.add(frozenset([1,10]))
-  # incompatibilidades.add(frozenset([1,2]))
-  # incompatibilidades.add(frozenset([2,1]))
-  # incompatibilidades.add(frozenset([1,10]))
-  # incompatibilidades.add(frozenset([10,1]))
-  # print(incompatibilidades)
   cargar_problema_desde_archivo()
 
 if __name__ == "__main__":

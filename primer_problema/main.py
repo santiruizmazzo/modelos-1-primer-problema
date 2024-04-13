@@ -20,6 +20,18 @@ def cargar_cantidad_de_prendas(archivo) -> int:
     return int(linea[2])
 
 
+def cargar_incompatibilidad(palabras, prendas):
+    numero_prenda = int(palabras[1])
+    numero_prenda_incompatible = int(palabras[2])
+    prendas[numero_prenda]["incompatible_con"].append(numero_prenda_incompatible)
+
+
+def cargar_tiempo_de_lavado(palabras, prendas):
+    numero_prenda = int(palabras[1])
+    tiempo_lavado = int(palabras[2])
+    prendas[numero_prenda]["tiempo_lavado"] = tiempo_lavado
+
+
 def cargar_prendas_desde_archivo() -> dict:
 
     with open(ARCHIVO_PROBLEMA) as archivo:
@@ -36,15 +48,9 @@ def cargar_prendas_desde_archivo() -> dict:
 
             match tipo:
                 case TipoDeLinea.INCOMPATIBILIDAD:
-                    numero_prenda = int(palabras[1])
-                    numero_prenda_incompatible = int(palabras[2])
-                    prendas[numero_prenda]["incompatible_con"].append(
-                        numero_prenda_incompatible
-                    )
+                    cargar_incompatibilidad(palabras, prendas)
                 case TipoDeLinea.TIEMPO_LAVADO:
-                    numero_prenda = int(palabras[1])
-                    tiempo_lavado = int(palabras[2])
-                    prendas[numero_prenda]["tiempo_lavado"] = tiempo_lavado
+                    cargar_tiempo_de_lavado(palabras, prendas)
 
     return prendas
 

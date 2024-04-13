@@ -5,22 +5,26 @@ class TipoDeLinea:
     TIEMPO_LAVADO = "n"
 
 
+ARCHIVO_PROBLEMA = "primer_problema.txt"
+ARCHIVO_SOLUCION = "solucion.txt"
+MODO_ESCRITURA = "w"
+
+
 def cargar_cantidad_de_prendas(archivo) -> int:
     linea = archivo.readline().split()
+    tipo = linea[0]
 
-    while linea[0] != TipoDeLinea.PROBLEMA:
+    while tipo != TipoDeLinea.PROBLEMA:
         linea = archivo.readline().split()
 
     return int(linea[2])
 
 
 def cargar_prendas_desde_archivo() -> dict:
-    ARCHIVO_PROBLEMA = "primer_problema.txt"
 
     with open(ARCHIVO_PROBLEMA) as archivo:
 
         cantidad_prendas = cargar_cantidad_de_prendas(archivo)
-
         prendas = {
             numero_prenda: {"tiempo_lavado": 0, "incompatible_con": []}
             for numero_prenda in range(1, cantidad_prendas + 1)
@@ -42,7 +46,7 @@ def cargar_prendas_desde_archivo() -> dict:
                     tiempo_lavado = int(palabras[2])
                     prendas[numero_prenda]["tiempo_lavado"] = tiempo_lavado
 
-        return prendas
+    return prendas
 
 
 def ordenar_prendas_por_tiempo(prendas) -> list:
@@ -86,8 +90,6 @@ def armar_lavados(prendas) -> dict:
 
 
 def guardar_lavados_en_archivo(lavados):
-    ARCHIVO_SOLUCION = "solucion.txt"
-    MODO_ESCRITURA = "w"
 
     with open(ARCHIVO_SOLUCION, MODO_ESCRITURA) as archivo:
         for numero_lavado, lavado in lavados.items():

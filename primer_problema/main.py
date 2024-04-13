@@ -85,15 +85,6 @@ def armar_lavados(prendas):
         )
     )
     return dict(enumerate(lavados, 1))
-    pprint.pprint(lavados)
-    lavados = list(
-        map(
-            lambda lavado: max(
-                tiempo_lavado for numero_prenda, tiempo_lavado in lavado
-            ),
-            lavados,
-        )
-    )
 
 
 def guardar_lavados_en_archivo(lavados):
@@ -106,10 +97,28 @@ def guardar_lavados_en_archivo(lavados):
                 archivo.write(f"{prenda[0]} {numero_lavado}\n")
 
 
+def mostrar_tiempos_de_lavado(lavados):
+    lavados = dict(
+        enumerate(
+            start=1,
+            iterable=map(
+                lambda lavado: max(
+                    tiempo_lavado for numero_prenda, tiempo_lavado in lavado
+                ),
+                lavados.values(),
+            ),
+        )
+    )
+    for numero, tiempo in lavados.items():
+        print(f"Lavado {numero} -> Tiempo: {tiempo}")
+    print(f"Tiempo total de lavado: {sum(lavados.values())}")
+
+
 def main() -> None:
     prendas = cargar_prendas_desde_archivo()
     lavados = armar_lavados(prendas)
     guardar_lavados_en_archivo(lavados)
+    mostrar_tiempos_de_lavado(lavados)
 
 
 if __name__ == "__main__":

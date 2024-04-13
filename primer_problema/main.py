@@ -8,7 +8,7 @@ class TipoDeLinea:
     TIEMPO_LAVADO = "n"
 
 
-def cargar_parametros_del_problema(archivo):
+def cargar_cantidad_de_prendas(archivo):
     linea = archivo.readline().split()
 
     while linea[0] != TipoDeLinea.PROBLEMA:
@@ -22,7 +22,7 @@ def cargar_prendas_desde_archivo():
 
     with open(ARCHIVO_PROBLEMA) as archivo:
 
-        cantidad_prendas = cargar_parametros_del_problema(archivo)
+        cantidad_prendas = cargar_cantidad_de_prendas(archivo)
 
         prendas = {
             numero_prenda: {"tiempo_lavado": 0, "incompatible_con": []}
@@ -48,17 +48,20 @@ def cargar_prendas_desde_archivo():
         return prendas
 
 
-def armar_lavados(prendas):
-    prendas_ordenadas = list(
+def ordenar_prendas_por_tiempo(prendas):
+    return list(
         map(
             lambda item: item[0],
             sorted(
                 prendas.items(),
-                key=lambda item: item[1]["tiempo_lavado"],
+                key=lambda prenda: prenda[1]["tiempo_lavado"],
             ),
         )
     )
 
+
+def armar_lavados(prendas):
+    prendas_ordenadas = ordenar_prendas_por_tiempo(prendas)
     lavados = [[] for _ in range(len(prendas_ordenadas))]
 
     while prendas_ordenadas:
@@ -68,21 +71,19 @@ def armar_lavados(prendas):
         i = 0
         while not asignada_a_lavado and i < len(lavados):
             lavado_actual = lavados[i]
+            prendas_incompatibles = set(prendas[prenda_actual]["incompatible_con"])
 
-            if set(prendas[prenda_actual]["incompatible_con"]).isdisjoint(
-                lavado_actual
-            ):
+            if prendas_incompatibles.isdisjoint(lavado_actual):
                 lavado_actual.append(prenda_actual)
                 asignada_a_lavado = True
             i += 1
 
-    lavados = list(
-        map(
-            lambda lavado: [
-                (prenda, prendas[prenda]["tiempo_lavado"]) for prenda in lavado
-            ],
-            filter(lambda lavado: lavado, lavados),
-        )
+    lavados = filter(lambda lavado: lavado, lavados)
+    lavados = map(
+        lambda lavado: [
+            (prenda, prendas[prenda]["tiempo_lavado"]) for prenda in lavado
+        ],
+        lavados,
     )
     return dict(enumerate(lavados, 1))
 

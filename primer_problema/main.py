@@ -1,6 +1,3 @@
-import pprint
-
-
 class TipoDeLinea:
     COMENTARIO = "c"
     PROBLEMA = "p"
@@ -8,7 +5,7 @@ class TipoDeLinea:
     TIEMPO_LAVADO = "n"
 
 
-def cargar_cantidad_de_prendas(archivo):
+def cargar_cantidad_de_prendas(archivo) -> int:
     linea = archivo.readline().split()
 
     while linea[0] != TipoDeLinea.PROBLEMA:
@@ -17,7 +14,7 @@ def cargar_cantidad_de_prendas(archivo):
     return int(linea[2])
 
 
-def cargar_prendas_desde_archivo():
+def cargar_prendas_desde_archivo() -> dict:
     ARCHIVO_PROBLEMA = "primer_problema.txt"
 
     with open(ARCHIVO_PROBLEMA) as archivo:
@@ -48,7 +45,7 @@ def cargar_prendas_desde_archivo():
         return prendas
 
 
-def ordenar_prendas_por_tiempo(prendas):
+def ordenar_prendas_por_tiempo(prendas) -> list:
     return list(
         map(
             lambda item: item[0],
@@ -60,7 +57,7 @@ def ordenar_prendas_por_tiempo(prendas):
     )
 
 
-def armar_lavados(prendas):
+def armar_lavados(prendas) -> dict:
     prendas_ordenadas = ordenar_prendas_por_tiempo(prendas)
     lavados = [[] for _ in range(len(prendas_ordenadas))]
 

@@ -14,17 +14,15 @@ def cargar_parametros_del_problema(archivo):
     while linea[0] != TipoDeLinea.PROBLEMA:
         linea = archivo.readline().split()
 
-    return int(linea[2]), int(linea[3])
+    return int(linea[2])
 
 
-def cargar_problema_desde_archivo():
+def cargar_prendas_desde_archivo():
     ARCHIVO_PROBLEMA = "primer_problema.txt"
 
     with open(ARCHIVO_PROBLEMA) as archivo:
 
-        cantidad_prendas, cantidad_incompatibilidades = cargar_parametros_del_problema(
-            archivo
-        )
+        cantidad_prendas = cargar_parametros_del_problema(archivo)
 
         prendas = {
             numero_prenda: {"tiempo_lavado": 0, "incompatible_con": []}
@@ -50,9 +48,7 @@ def cargar_problema_desde_archivo():
         return prendas
 
 
-def main() -> None:
-    prendas = cargar_problema_desde_archivo()
-
+def armar_lavados(prendas):
     prendas_ordenadas = list(
         map(
             lambda item: item[0],
@@ -88,6 +84,7 @@ def main() -> None:
             filter(lambda lavado: lavado, lavados),
         )
     )
+    return dict(enumerate(lavados, 1))
     pprint.pprint(lavados)
     lavados = list(
         map(
@@ -97,8 +94,22 @@ def main() -> None:
             lavados,
         )
     )
-    pprint.pprint(lavados)
-    print(sum(lavados))
+
+
+def guardar_lavados_en_archivo(lavados):
+    ARCHIVO_SOLUCION = "solucion.txt"
+    MODO_ESCRITURA = "w"
+
+    with open(ARCHIVO_SOLUCION, MODO_ESCRITURA) as archivo:
+        for numero_lavado, lavado in lavados.items():
+            for prenda in lavado:
+                archivo.write(f"{prenda[0]} {numero_lavado}\n")
+
+
+def main() -> None:
+    prendas = cargar_prendas_desde_archivo()
+    lavados = armar_lavados(prendas)
+    guardar_lavados_en_archivo(lavados)
 
 
 if __name__ == "__main__":

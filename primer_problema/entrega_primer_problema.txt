@@ -1,7 +1,27 @@
 Impresión del problema:
+Al principio me pareció un problema fácil a simple vista. Luego a medida que lo reflexioné un poco más, cambió mi percepción, ahora ya no 
+era tan obvio y directo como lo imaginaba.
+Dentro de todo es un problema corto porque no tiene muchas variables que tener en cuenta. Lo que sí creo es que el núcleo de la complejidad
+es cómo asegurarte de que estás llegando al menor tiempo de lavado posible.
 
 Posible solución:
+Mi idea es crear un diccionario que tenga una entrada por cada prenda del problema. Y que estas tengan asociadas tanto el tiempo de lavado
+como una lista de prendas que son incompatibles.
+Luego de esto puedo crear una lista de prendas ordenada según sus tiempos de lavado de forma ascendente. Con esto puedo ir sacando las
+prendas que más tiempo tarden como si fuera una pila (las que están en el tope son las que más tardan). Como de antemano sé que el peor caso
+de todos es que todas las prendas sean incompatibles con todas, entonces cómo máximo tendré tantos lavados como prendas haya.
+A medida que voy desapilando prendas voy chequeando con cada lavado formado (al principio están todos vacíos) si esa prenda puede formar 
+parte del mismo (si no es incompatible con ninguna prenda de él). Como voy intentando una prenda a la vez y comienzo con las que mayor
+tiempo de lavado tardan, siempre van a intentar juntarse las que mas tardan con las que mas tardan en los lavados.
+Si no probase con las que mas tardan primero por ahi podría incluir en un lavado una prenda que tarda muy poco y ademas es incompatible con
+una que no fue agregada al lavado pero que tarda más.
 
 Cambios para mejorar resultados:
+Al principio pensé que el orden no importaba para probar qué prendas entraban en qué lavados. O sea, primero intentaba meter la prenda 1
+en algún lavado. Como no había ninguna otra prenda en un lavado, entraba en el primero que había. Y después seguía con el 2, 3, etc.
+Esto me dió un tiempo total de 74. Entonces lo que hice fue únicamente ordenar la lista que usaba para iterar sobre cada prenda, en base
+al tiempo de lavado de cada una. Un pro encontrado fue que mejoró el tiempo total bastante: de 74 a 63. Una contra puede ser que estoy
+agregando complejidad algorítmica al ordenar una lista de n prendas, cosa que antes no pasaba.
 
 Comentarios finales:
+No pude encontrar algún otro problema algorítmico que se le parezca. Por eso esta fue la mejor solución que pude diseñar.

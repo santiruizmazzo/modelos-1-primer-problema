@@ -124,13 +124,13 @@ def mostrar_tiempos_de_lavado(lavados):
     print(f"Tiempo total de lavado: {sum(lavados.values())}")
 
 
-def crear_path_problema_desde_input() -> str:
-    prefijo_archivo = sys.argv[1]
-    return PATH_CARPETA_PROBLEMAS + prefijo_archivo + SUFIJO_ARCHIVO_PROBLEMA
+def path_archivo_problema_desde_input() -> str:
+    nombre_archivo = sys.argv[1]
+    return PATH_CARPETA_PROBLEMAS + nombre_archivo + SUFIJO_ARCHIVO_PROBLEMA
 
 
 if __name__ == "__main__":
-    path_problema = crear_path_problema_desde_input()
+    path_problema = path_archivo_problema_desde_input()
     prendas = cargar_prendas_desde(path_problema)
     lavados = armar_lavados_para(prendas)
     escribir_solucion_segun(lavados)

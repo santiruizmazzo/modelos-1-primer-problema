@@ -14,7 +14,7 @@ ARCHIVO_SOLUCION = "solucion.txt"
 MODO_ESCRITURA = "w"
 
 
-def cargar_cantidad_de_prendas(archivo) -> int:
+def cantidad_de_prendas_segun(archivo) -> int:
     linea = archivo.readline().split()
 
     while linea[0] != TipoDeLinea.PROBLEMA:
@@ -38,7 +38,7 @@ def cargar_tiempo_de_lavado(palabras, prendas):
 def cargar_prendas_desde(path_problema) -> dict:
 
     with open(path_problema) as archivo:
-        cantidad_prendas = cargar_cantidad_de_prendas(archivo)
+        cantidad_prendas = cantidad_de_prendas_segun(archivo)
         prendas = {
             numero_prenda: {"tiempo_lavado": 0, "incompatible_con": []}
             for numero_prenda in range(1, cantidad_prendas + 1)
@@ -47,7 +47,6 @@ def cargar_prendas_desde(path_problema) -> dict:
         for linea in archivo:
             palabras = linea.split()
             tipo = palabras[0]
-
             match tipo:
                 case TipoDeLinea.INCOMPATIBILIDAD:
                     cargar_incompatibilidad(palabras, prendas)
@@ -69,7 +68,7 @@ def ordenar_prendas_por_tiempo(prendas) -> list:
     )
 
 
-def armar_lavados(prendas) -> dict:
+def armar_lavados_para(prendas) -> dict:
     prendas_ordenadas = ordenar_prendas_por_tiempo(prendas)
     lavados = [[] for _ in range(len(prendas_ordenadas))]
 
@@ -101,7 +100,7 @@ def armar_lavados(prendas) -> dict:
     return dict(enumerate(lavados, 1))
 
 
-def escribir_solucion(lavados):
+def escribir_solucion_segun(lavados):
     with open(ARCHIVO_SOLUCION, MODO_ESCRITURA) as archivo:
         for numero_lavado, lavado in lavados.items():
             for prenda in lavado:
@@ -133,6 +132,6 @@ def crear_path_problema_desde_input() -> str:
 if __name__ == "__main__":
     path_problema = crear_path_problema_desde_input()
     prendas = cargar_prendas_desde(path_problema)
-    lavados = armar_lavados(prendas)
-    escribir_solucion(lavados)
+    lavados = armar_lavados_para(prendas)
+    escribir_solucion_segun(lavados)
     mostrar_tiempos_de_lavado(lavados)

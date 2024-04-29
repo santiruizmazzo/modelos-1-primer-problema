@@ -1,3 +1,6 @@
+import pprint
+
+
 class TipoDeLinea:
     COMENTARIO = "c"
     PROBLEMA = "p"
@@ -5,7 +8,7 @@ class TipoDeLinea:
     TIEMPO_LAVADO = "n"
 
 
-ARCHIVO_PROBLEMA = "primer_problema.txt"
+ARCHIVO_PROBLEMA = "segundo_problema.txt"
 ARCHIVO_SOLUCION = "solucion.txt"
 MODO_ESCRITURA = "w"
 
@@ -56,7 +59,7 @@ def cargar_prendas_desde_archivo() -> dict:
 def ordenar_prendas_por_tiempo(prendas) -> list:
     return list(
         map(
-            lambda item: item[0],
+            lambda item: (item[0], item[1]["tiempo_lavado"]),
             sorted(
                 prendas.items(),
                 key=lambda prenda: prenda[1]["tiempo_lavado"],
@@ -71,25 +74,29 @@ def armar_lavados(prendas) -> dict:
 
     while prendas_ordenadas:
         prenda_actual = prendas_ordenadas.pop()
-        asignada_a_lavado = False
 
         i = 0
-        while not asignada_a_lavado and i < len(lavados):
-            lavado_actual = lavados[i]
-            prendas_incompatibles = set(prendas[prenda_actual]["incompatible_con"])
+        mejor_lavado = 1
+        mayor_tiempo_de_lavado = 0
 
-            if prendas_incompatibles.isdisjoint(lavado_actual):
-                lavado_actual.append(prenda_actual)
-                asignada_a_lavado = True
+        while i < len(lavados):
+            lavado_actual = lavados[i]
+            prendas_incompatibles = set(prendas[prenda_actual[0]]["incompatible_con"])
+            tiempo_lavado_actual = sum(n for _, n in lavado_actual)
+
+            if prendas_incompatibles.isdisjoint(
+                map(lambda prenda: prenda[0], lavado_actual)
+            ):
+
+                if tiempo_lavado_actual >= mayor_tiempo_de_lavado:
+                    mayor_tiempo_de_lavado = tiempo_lavado_actual
+                    mejor_lavado = i
+
             i += 1
 
+        lavados[mejor_lavado].append(prenda_actual)
+
     lavados = filter(lambda lavado: lavado, lavados)
-    lavados = map(
-        lambda lavado: [
-            (prenda, prendas[prenda]["tiempo_lavado"]) for prenda in lavado
-        ],
-        lavados,
-    )
     return dict(enumerate(lavados, 1))
 
 

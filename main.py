@@ -1,4 +1,5 @@
 import pprint
+import sys
 
 
 class TipoDeLinea:
@@ -8,7 +9,6 @@ class TipoDeLinea:
     TIEMPO_LAVADO = "n"
 
 
-ARCHIVO_PROBLEMA = "segundo_problema.txt"
 ARCHIVO_SOLUCION = "solucion.txt"
 MODO_ESCRITURA = "w"
 
@@ -34,9 +34,9 @@ def cargar_tiempo_de_lavado(palabras, prendas):
     prendas[numero_prenda]["tiempo_lavado"] = tiempo_lavado
 
 
-def cargar_prendas_desde_archivo() -> dict:
+def cargar_prendas_desde_archivo(archivo_problema) -> dict:
 
-    with open(ARCHIVO_PROBLEMA) as archivo:
+    with open(archivo_problema) as archivo:
         cantidad_prendas = cargar_cantidad_de_prendas(archivo)
         prendas = {
             numero_prenda: {"tiempo_lavado": 0, "incompatible_con": []}
@@ -125,7 +125,8 @@ def mostrar_tiempos_de_lavado(lavados):
 
 
 def main() -> None:
-    prendas = cargar_prendas_desde_archivo()
+    archivo_problema = sys.argv[1]
+    prendas = cargar_prendas_desde_archivo(archivo_problema)
     lavados = armar_lavados(prendas)
     guardar_lavados_en_archivo(lavados)
     mostrar_tiempos_de_lavado(lavados)

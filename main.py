@@ -1,4 +1,3 @@
-import pprint
 import sys
 
 
@@ -9,6 +8,8 @@ class TipoDeLinea:
     TIEMPO_LAVADO = "n"
 
 
+PATH_CARPETA_PROBLEMAS = "problemas/"
+SUFIJO_ARCHIVO_PROBLEMA = "_problema.txt"
 ARCHIVO_SOLUCION = "solucion.txt"
 MODO_ESCRITURA = "w"
 
@@ -34,9 +35,9 @@ def cargar_tiempo_de_lavado(palabras, prendas):
     prendas[numero_prenda]["tiempo_lavado"] = tiempo_lavado
 
 
-def cargar_prendas_desde_archivo(archivo_problema) -> dict:
+def cargar_prendas_desde(path_problema) -> dict:
 
-    with open(archivo_problema) as archivo:
+    with open(path_problema) as archivo:
         cantidad_prendas = cargar_cantidad_de_prendas(archivo)
         prendas = {
             numero_prenda: {"tiempo_lavado": 0, "incompatible_con": []}
@@ -100,7 +101,7 @@ def armar_lavados(prendas) -> dict:
     return dict(enumerate(lavados, 1))
 
 
-def guardar_lavados_en_archivo(lavados):
+def escribir_solucion(lavados):
     with open(ARCHIVO_SOLUCION, MODO_ESCRITURA) as archivo:
         for numero_lavado, lavado in lavados.items():
             for prenda in lavado:
@@ -124,11 +125,16 @@ def mostrar_tiempos_de_lavado(lavados):
     print(f"Tiempo total de lavado: {sum(lavados.values())}")
 
 
+def crear_path_problema_desde_input() -> str:
+    prefijo_archivo = sys.argv[1]
+    return PATH_CARPETA_PROBLEMAS + prefijo_archivo + SUFIJO_ARCHIVO_PROBLEMA
+
+
 def main() -> None:
-    archivo_problema = sys.argv[1]
-    prendas = cargar_prendas_desde_archivo(archivo_problema)
+    path_problema = crear_path_problema_desde_input()
+    prendas = cargar_prendas_desde(path_problema)
     lavados = armar_lavados(prendas)
-    guardar_lavados_en_archivo(lavados)
+    escribir_solucion(lavados)
     mostrar_tiempos_de_lavado(lavados)
 
 

@@ -130,13 +130,9 @@ def crear_path_problema_desde_input() -> str:
     return PATH_CARPETA_PROBLEMAS + prefijo_archivo + SUFIJO_ARCHIVO_PROBLEMA
 
 
-def main() -> None:
+if __name__ == "__main__":
     path_problema = crear_path_problema_desde_input()
     prendas = cargar_prendas_desde(path_problema)
     lavados = armar_lavados(prendas)
     escribir_solucion(lavados)
     mostrar_tiempos_de_lavado(lavados)
-
-
-if __name__ == "__main__":
-    main()

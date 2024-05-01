@@ -40,7 +40,7 @@ def cargar_prendas_desde(path_problema) -> dict:
             match tipo:
                 case TipoDeLinea.INCOMPATIBILIDAD:
                     id_prenda_incompatible = int(palabras[2])
-                    prenda_actual.es_incompatible_con(id_prenda_incompatible)
+                    prenda_actual.agregar_prenda_incompatible(id_prenda_incompatible)
                 case TipoDeLinea.TIEMPO_LAVADO:
                     tiempo_lavado = int(palabras[2])
                     prenda_actual.tarda_en_lavarse(tiempo_lavado)

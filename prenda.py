@@ -4,8 +4,13 @@ class Prenda:
         self.tiempo_de_lavado = 0
         self.incompatibilidades = []
 
-    def es_incompatible_con(self, numero_de_prenda):
+    def agregar_prenda_incompatible(self, numero_de_prenda):
         self.incompatibilidades.append(numero_de_prenda)
 
     def tarda_en_lavarse(self, tiempo_de_lavado):
         self.tiempo_de_lavado = tiempo_de_lavado
+
+    def es_compatible_con(self, lavado):
+        return set(self.incompatibilidades).isdisjoint(
+            map(lambda prenda: prenda.id, lavado)
+        )

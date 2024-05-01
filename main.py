@@ -1,4 +1,5 @@
 import sys
+from prenda import Prenda
 
 
 class TipoDeLinea:
@@ -23,49 +24,31 @@ def cantidad_de_prendas_segun(archivo) -> int:
     return int(linea[2])
 
 
-def cargar_incompatibilidad(palabras, prendas):
-    numero_prenda = int(palabras[1])
-    numero_prenda_incompatible = int(palabras[2])
-    prendas[numero_prenda]["incompatible_con"].append(numero_prenda_incompatible)
-
-
-def cargar_tiempo_de_lavado(palabras, prendas):
-    numero_prenda = int(palabras[1])
-    tiempo_lavado = int(palabras[2])
-    prendas[numero_prenda]["tiempo_lavado"] = tiempo_lavado
-
-
 def cargar_prendas_desde(path_problema) -> dict:
 
     with open(path_problema) as archivo:
         cantidad_prendas = cantidad_de_prendas_segun(archivo)
-        prendas = {
-            numero_prenda: {"tiempo_lavado": 0, "incompatible_con": []}
-            for numero_prenda in range(1, cantidad_prendas + 1)
-        }
+        prendas = [Prenda(id_prenda) for id_prenda in range(1, cantidad_prendas + 1)]
 
         for linea in archivo:
             palabras = linea.split()
             tipo = palabras[0]
+            id_prenda = int(palabras[1])
+            prenda_actual = prendas[id_prenda - 1]
+
             match tipo:
                 case TipoDeLinea.INCOMPATIBILIDAD:
-                    cargar_incompatibilidad(palabras, prendas)
+                    id_prenda_incompatible = int(palabras[2])
+                    prenda_actual.es_incompatible_con(id_prenda_incompatible)
                 case TipoDeLinea.TIEMPO_LAVADO:
-                    cargar_tiempo_de_lavado(palabras, prendas)
+                    tiempo_lavado = int(palabras[2])
+                    prenda_actual.tarda_en_lavarse(tiempo_lavado)
 
     return prendas
 
 
 def ordenar_prendas_por_tiempo(prendas) -> list:
-    return list(
-        map(
-            lambda item: (item[0], item[1]["tiempo_lavado"]),
-            sorted(
-                prendas.items(),
-                key=lambda prenda: prenda[1]["tiempo_lavado"],
-            ),
-        )
-    )
+    return list(sorted(prendas, key=lambda prenda: prenda.tiempo_de_lavado))
 
 
 def armar_lavados_para(prendas) -> dict:
@@ -81,11 +64,13 @@ def armar_lavados_para(prendas) -> dict:
 
         while i < len(lavados):
             lavado_actual = lavados[i]
-            prendas_incompatibles = set(prendas[prenda_actual[0]]["incompatible_con"])
-            tiempo_lavado_actual = sum(n for _, n in lavado_actual)
+            prendas_incompatibles = set(prenda_actual.incompatibilidades)
+            tiempo_lavado_actual = sum(
+                prenda.tiempo_de_lavado for prenda in lavado_actual
+            )
 
             if prendas_incompatibles.isdisjoint(
-                map(lambda prenda: prenda[0], lavado_actual)
+                map(lambda prenda: prenda.id, lavado_actual)
             ):
 
                 if tiempo_lavado_actual >= mayor_tiempo_de_lavado:
@@ -104,7 +89,7 @@ def escribir_solucion_segun(lavados):
     with open(ARCHIVO_SOLUCION, MODO_ESCRITURA) as archivo:
         for numero_lavado, lavado in lavados.items():
             for prenda in lavado:
-                archivo.write(f"{prenda[0]} {numero_lavado}\n")
+                archivo.write(f"{prenda.id} {numero_lavado}\n")
 
 
 def mostrar_tiempos_de_lavado(lavados):
@@ -112,9 +97,7 @@ def mostrar_tiempos_de_lavado(lavados):
         enumerate(
             start=1,
             iterable=map(
-                lambda lavado: max(
-                    tiempo_lavado for numero_prenda, tiempo_lavado in lavado
-                ),
+                lambda lavado: max(prenda.tiempo_de_lavado for prenda in lavado),
                 lavados.values(),
             ),
         )

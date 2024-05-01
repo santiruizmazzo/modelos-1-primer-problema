@@ -1,4 +1,5 @@
 import sys
+from lavanderia import Lavanderia
 from prenda import Prenda
 
 
@@ -47,44 +48,6 @@ def cargar_prendas_desde(path_problema) -> dict:
     return prendas
 
 
-def ordenar_prendas_por_tiempo(prendas) -> list:
-    return list(sorted(prendas, key=lambda prenda: prenda.tiempo_de_lavado))
-
-
-def armar_lavados_para(prendas) -> dict:
-    prendas_ordenadas = ordenar_prendas_por_tiempo(prendas)
-    lavados = [[] for _ in range(len(prendas_ordenadas))]
-
-    while prendas_ordenadas:
-        prenda_actual = prendas_ordenadas.pop()
-
-        i = 0
-        mejor_lavado = 1
-        mayor_tiempo_de_lavado = 0
-
-        while i < len(lavados):
-            lavado_actual = lavados[i]
-            prendas_incompatibles = set(prenda_actual.incompatibilidades)
-            tiempo_lavado_actual = sum(
-                prenda.tiempo_de_lavado for prenda in lavado_actual
-            )
-
-            if prendas_incompatibles.isdisjoint(
-                map(lambda prenda: prenda.id, lavado_actual)
-            ):
-
-                if tiempo_lavado_actual >= mayor_tiempo_de_lavado:
-                    mayor_tiempo_de_lavado = tiempo_lavado_actual
-                    mejor_lavado = i
-
-            i += 1
-
-        lavados[mejor_lavado].append(prenda_actual)
-
-    lavados = filter(lambda lavado: lavado, lavados)
-    return dict(enumerate(lavados, 1))
-
-
 def escribir_solucion_segun(lavados):
     with open(ARCHIVO_SOLUCION, MODO_ESCRITURA) as archivo:
         for numero_lavado, lavado in lavados.items():
@@ -115,6 +78,6 @@ def path_archivo_problema_desde_input() -> str:
 if __name__ == "__main__":
     path_problema = path_archivo_problema_desde_input()
     prendas = cargar_prendas_desde(path_problema)
-    lavados = armar_lavados_para(prendas)
+    lavados = Lavanderia.armar_lavados(prendas)
     escribir_solucion_segun(lavados)
     mostrar_tiempos_de_lavado(lavados)

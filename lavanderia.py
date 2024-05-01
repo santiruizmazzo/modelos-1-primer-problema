@@ -15,7 +15,7 @@ class Lavanderia:
                 tiempo_lavado_actual = sum(prenda.tiempo_de_lavado for prenda in lavado)
 
                 if (
-                    prenda.es_compatible_con(lavado)
+                    prenda.puede_estar_en(lavado)
                     and tiempo_lavado_actual >= tiempo_lavado_max
                 ):
                     tiempo_lavado_max = tiempo_lavado_actual

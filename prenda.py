@@ -10,7 +10,7 @@ class Prenda:
     def tarda_en_lavarse(self, tiempo_de_lavado):
         self.tiempo_de_lavado = tiempo_de_lavado
 
-    def es_compatible_con(self, lavado):
+    def puede_estar_en(self, lavado):
         return set(self.incompatibilidades).isdisjoint(
             map(lambda prenda: prenda.id, lavado)
         )

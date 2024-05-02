@@ -1,0 +1,10 @@
+Impresión del problema:
+
+Posible solución:
+En el algoritmo de armado de lavados estoy calculando el tiempo de cada lavado como la suma de los tiempos de todas sus prendas. En realidad
+esto no debería ser así, ya que el tiempo de cada lavado es el tiempo de la prenda suya que más tarde en lavarse. Esto puede estar 
+entorpeciendo el algoritmo para decidir el mejor lavado al que puedo incluir la prenda actual.
+
+Cambios para mejorar resultados:
+
+Comentarios finales:

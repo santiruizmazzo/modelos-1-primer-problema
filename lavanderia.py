@@ -12,12 +12,11 @@ class Lavanderia:
 
             while i < len(lavados):
                 lavado = lavados[i]
-                tiempo_lavado_actual = sum(prenda.tiempo_de_lavado for prenda in lavado)
-                # tiempo_lavado_actual = (
-                #     max(prenda.tiempo_de_lavado for prenda in lavado)
-                #     if len(lavado) > 0
-                #     else 0
-                # )
+                tiempo_lavado_actual = (
+                    max(prenda.tiempo_de_lavado for prenda in lavado)
+                    if len(lavado) > 0
+                    else 0
+                )
 
                 if (
                     prenda.puede_estar_en(lavado)

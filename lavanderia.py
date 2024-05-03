@@ -1,7 +1,10 @@
+from lavado import Lavado
+
+
 class Lavanderia:
-    def armar_lavados(prendas: list) -> dict:
-        prendas.sort(key=lambda prenda: prenda.tiempo_de_lavado)
-        lavados = [[] for _ in range(len(prendas))]
+    def armar_lavados(prendas: list) -> list[Lavado]:
+        prendas.sort(key=lambda prenda: prenda.tiempo_lavado)
+        lavados = [Lavado(id_lavado) for id_lavado in range(1, len(prendas) + 1)]
 
         while prendas:
             prenda = prendas.pop()
@@ -12,22 +15,13 @@ class Lavanderia:
 
             while i < len(lavados):
                 lavado = lavados[i]
-                tiempo_lavado_actual = (
-                    max(prenda.tiempo_de_lavado for prenda in lavado)
-                    if len(lavado) > 0
-                    else 0
-                )
 
-                if (
-                    prenda.puede_estar_en(lavado)
-                    and tiempo_lavado_actual >= tiempo_lavado_max
-                ):
-                    tiempo_lavado_max = tiempo_lavado_actual
+                if prenda.puede_estar_en(lavado) and lavado.tiempo >= tiempo_lavado_max:
+                    tiempo_lavado_max = lavado.tiempo
                     mejor_lavado = i
 
                 i += 1
 
-            lavados[mejor_lavado].append(prenda)
+            lavados[mejor_lavado].agregar_prenda(prenda)
 
-        lavados = filter(lambda lavado: lavado, lavados)
-        return dict(enumerate(lavados, 1))
+        return list(filter(lambda lavado: lavado.tiene_prendas(), lavados))

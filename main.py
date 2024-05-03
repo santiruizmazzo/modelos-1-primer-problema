@@ -25,7 +25,7 @@ def cantidad_de_prendas_segun(archivo) -> int:
     return int(linea[2])
 
 
-def cargar_prendas_desde(path_problema) -> dict:
+def cargar_prendas_desde(path_problema) -> list[Prenda]:
 
     with open(path_problema) as archivo:
         cantidad_prendas = cantidad_de_prendas_segun(archivo)
@@ -52,24 +52,16 @@ def cargar_prendas_desde(path_problema) -> dict:
 
 def escribir_solucion_segun(lavados):
     with open(ARCHIVO_SOLUCION, MODO_ESCRITURA) as archivo:
-        for numero_lavado, lavado in lavados.items():
-            for prenda in lavado:
-                archivo.write(f"{prenda.id} {numero_lavado}\n")
+        for lavado in lavados:
+            for prenda in lavado.prendas:
+                archivo.write(f"{prenda.id} {lavado.id}\n")
 
 
 def mostrar_tiempos_de_lavado(lavados):
-    lavados = dict(
-        enumerate(
-            start=1,
-            iterable=map(
-                lambda lavado: max(prenda.tiempo_de_lavado for prenda in lavado),
-                lavados.values(),
-            ),
-        )
-    )
-    for numero, tiempo in lavados.items():
-        print(f"Lavado {numero} -> Tiempo: {tiempo}")
-    print(f"Tiempo total de lavado: {sum(lavados.values())}")
+    for lavado in lavados:
+        print(f"Lavado {lavado.id} -> Tiempo: {lavado.tiempo}")
+    print(f"Tiempo total de lavado: {sum(lavado.tiempo for lavado in lavados)}")
+    print(f"Cantidad total de lavados: {len(lavados)}")
 
 
 def path_archivo_problema_desde_input() -> str:

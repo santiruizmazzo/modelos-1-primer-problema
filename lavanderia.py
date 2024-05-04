@@ -1,8 +1,9 @@
 from lavado import Lavado
+from prenda import Prenda
 
 
 class Lavanderia:
-    def armar_lavados(prendas: list) -> list[Lavado]:
+    def armar_lavados(prendas: list[Prenda]) -> list[Lavado]:
         prendas.sort(key=lambda prenda: prenda.tiempo_lavado)
         lavados = []
 

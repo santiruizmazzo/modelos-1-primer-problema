@@ -6,5 +6,7 @@ esto no debería ser así, ya que el tiempo de cada lavado es el tiempo de la pr
 entorpeciendo el algoritmo para decidir el mejor lavado al que puedo incluir la prenda actual.
 
 Cambios para mejorar resultados:
+Antes creaba una lista que contenía tantos lavados como prendas haya en el problema, pero ahora voy creando nuevos lavados a medida que la
+prenda actual no pueda entrar en ninguno de los existentes (creo nuevos lavados on demand).
 
 Comentarios finales:

@@ -11,7 +11,7 @@ class Lavanderia:
 
             i = 0
             i_mejor_lavado = -1
-            tiempo_lavado_max = 0
+            tiempo_lavado_max = -1
 
             while i < len(lavados):
                 lavado = lavados[i]
@@ -27,7 +27,6 @@ class Lavanderia:
                 nuevo_lavado.agregar_prenda(prenda)
                 lavados.append(nuevo_lavado)
             else:
-                mejor_lavado = lavados[i_mejor_lavado]
-                mejor_lavado.agregar_prenda(prenda)
+                lavados[i_mejor_lavado].agregar_prenda(prenda)
 
         return lavados

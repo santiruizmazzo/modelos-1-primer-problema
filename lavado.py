@@ -10,6 +10,3 @@ class Lavado:
 
     def actualizar_tiempo(self) -> None:
         self.tiempo = max(prenda.tiempo_lavado for prenda in self.prendas)
-
-    def tiene_prendas(self) -> bool:
-        return len(self.prendas) > 0

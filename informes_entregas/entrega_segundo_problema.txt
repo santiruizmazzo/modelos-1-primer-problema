@@ -1,4 +1,5 @@
 Impresión del problema:
+Con respecto a la vez anterior, le voy viendo más la dificultad de llegar al resultado óptimo. Aunque no cambió, es el mismo problema.
 
 Posible solución:
 En el algoritmo de armado de lavados estoy calculando el tiempo de cada lavado como la suma de los tiempos de todas sus prendas. En realidad
@@ -10,3 +11,5 @@ Antes creaba una lista que contenía tantos lavados como prendas haya en el prob
 prenda actual no pueda entrar en ninguno de los existentes (creo nuevos lavados on demand).
 
 Comentarios finales:
+El haber corregido el error de cálculo de los tiempos de lavados mejoró bastante el tiempo final. Y luego el crear los lavados on demand
+además de requerir iterar muchas menos veces por cada prenda que se va desapilando, mejoró el tiempo final.

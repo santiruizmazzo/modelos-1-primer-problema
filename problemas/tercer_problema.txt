@@ -1,7 +1,7 @@
-c Cuarto Problema
+c Tercer Problema
 c El force push sobre el repo github implica la desaprobacion de todo el TP
 c
-c En esta cuarta entrega se pide que busquen el OPTIMO y lo suban a modelosuno.okapii.com, es MUY recomendable usar el codigo provisto
+c En esta tercera entrega se pide que busquen el OPTIMO y lo suban a modelosuno.okapii.com, es MUY recomendable usar el codigo provisto
 c CPLEX https://modelosuno.okapii.com/content/modelos_wvcp.zip
 c
 c Armar un informe con cada uno de los pasos, incluir graficos (solapas "Statistics", "Engine log", "Scripting log", etc.) y todo lo que consideren pertinente / interesante.
@@ -15,7 +15,7 @@ c 5) Modificar el modelo del punto anterior para que aproveche el limite de 15 l
 c 6) Comparar el paso 3 y el 5, repetir la prueba sabiendo que existe una solucion de 11 lavados
 c 7) Comparar en el informe la heuristica (paso 1) con la solucion mediante programacion lineal entera
 c
-c En el repo github creen un archivo "entrega_4.pdf", debe contener un informe final indicando las experiencias de todas las entregas, ideas y conclusiones que fueron sacado. Informe de los pasos de esta entrega.
+c En el repo github creen un archivo "entrega_3.pdf", debe contener un informe final indicando las experiencias de todas las entregas, ideas y conclusiones que fueron sacado. Informe de los pasos de esta entrega.
 c
 p edge 138 986
 e 1 36

@@ -23,7 +23,7 @@ real    0m0,023s
 user    0m0,017s
 sys     0m0,006s
 ```
-Como podemos ver la ejecución del script tardó 0.023s y arrojó un tiempo total de lavado de todas las prendas de 123 (sumatoria de los tiempos de cada lavado formado). Y la cantidad total de lavados armados fue de 11.
+Como podemos ver la ejecución del script tardó 0.023 segundos y arrojó un tiempo total de lavado de todas las prendas de 123 (sumatoria de los tiempos de cada lavado formado). Y la cantidad total de lavados armados fue de 11.
 
 ## Paso 2
 Se corre el modelo de la materia en CPLEX.
@@ -51,7 +51,7 @@ Luego de 10 minutos de ejecución podemos ver que el header del output de la sec
 20 Parallel mode: deterministic, using up to 8 threads.
 21 Root relaxation solution time = 1,43 sec. (475,39 ticks)
 ```
-Por lo que puedo entender, CPLEX hace un paso de preresolución del problema en el que reduce su tamaño.
+Por lo que puedo entender, CPLEX hace un paso de pre-resolución del problema en el que reduce su tamaño.
 Esto se puede intuir por la línea 4 del output, donde indica que eliminó 120467 filas (entiendo que representan las restricciones del modelo).
 Se puede ver también que para encontrar la solución, CPLEX busca un balance entre optimalidad y compatibilidad (línea 18).
 Aparentemente el método de búsqueda de la solución es "dynamic search" (línea 19).
@@ -90,10 +90,10 @@ Elapsed time = 611,03 sec. (157482,84 ticks, tree = 16,90 MB, solutions = 26)
 
 De acuerdo a la documentación de CPLEX ("If no solution has been found, the column titled Best Integer is blank; otherwise, it records 
 the objective value of the best integer solution found so far"), en la columna Best Integer estamos viendo cómo evoluciona el funcional
-de la mejor solución entera hasta el momento (el menor tiempo total de lavado).
+de la mejor solución entera hasta el momento (el menor tiempo total de lavado). Comienza con un valor de 2760 y rápidamente ya se pone en el orden de los 100.
 Cada cierto tiempo también se logea el tamaño en MB que ocupa el árbol de soluciones para el modelo y cuántas soluciones se han encontrado
 hasta ahora (las líneas que comienzan con "Elapsed time = ...").
-Luego de unos 10 minutos aproximadamente corté la ejecución y se puede ver que el mejor valor del funcional que pudo encontrar hasta el momento fue de 119. Que traducido al problema de las prendas significa que el menor tiempo total de lavado de prendas encontrado fue 119.
+Luego de unos 10 minutos aproximadamente corté la ejecución y se puede ver que el mejor valor del funcional (solución entera) que pudo encontrar hasta el momento fue de 119. Que traducido al problema de las prendas significa que el menor tiempo total de lavado de prendas encontrado fue 119. Si nos fijamos en la columna Gap, se nos muestra que la mejor solución encontrada es en el peor de los casos un 68.91% más alta que el óptimo real (lo cual es bastante malo).
 
 Ahora miramos la sección Statistics:
 
@@ -109,8 +109,7 @@ Y finalmente en la sección Profiler:
 Se observa que el tiempo total de la ejecución fue de 625.47 segundos. Prácticamente no tarda nada en cargar el modelo y todo el tiempo lo consume la propia resolución.
 Lo interesante está en las tareas que hace dentro de la optimización. Comienza con una pre-resolución del modelo como comenté antes. Luego realiza varias relajaciones (entiendo que es para poder resolver el problema primero como uno de programación lineal contínua).
 Hay un momento que realiza "cortes" al nodo raíz (que entiendo que sería el modelo original del problema), esto consume un 15% del total del tiempo de ejecución.
-También se aplican heurísticas, aunque no se especifiquen cuáles.
-Y por último vemos que utiliza la técnica de branch & bound para intentar resolver exactamente el problema. Aquí es con lo que se consume el 81% del tiempo total de la ejecución.
+También se aplican heurísticas, aunque no se especifiquen cuáles. Y por último vemos que utiliza la técnica de branch & bound para intentar resolver exactamente el problema. Aquí es con lo que se consume el 81% del tiempo total de la ejecución.
 
 ## Paso 3
 Se ejecutó el modelo de la materia con un pequeño cambio, se limitó el número de lavados máximos a 15 (int limiteColores = 15, en el script), como dice el enunciado.
@@ -127,9 +126,9 @@ Elapsed time = 689,18 sec. (303437,20 ticks, tree = 1578,41 MB, solutions = 14)
  134007 53704      109,0000   343      117,0000      106,0000 14306802    9,40%
 ```
 
-Como vemos luego de correr durante 689.18 segundos el menor tiempo total de lavado (Best Integer) fue de 117, habiendo realizado más de 14 millones de iteraciones.
+Como vemos luego de correr durante 689.18 segundos el menor tiempo total de lavado (Best Integer) fue de 117, habiendo realizado más de 14 millones de iteraciones. Viendo el resultado de la columna Gap podemos darnos cuenta que gracias a este límite de lavados (o colores) que impusimos, CPLEX pudo llegar a una solución entera mejor que la anterior en más o menos el mismo tiempo (sabiendo que ninguna de las dos ejecuciones terminaron por sí solas). Lo interesante es que aunque la mejor solución entera encontrada haya mejorado en 2, comparando con la del paso 2, la columna Gap nos dice que ahora está mucho más cerca del óptimo real que antes.
 
-Pero si miramos el principio de la ejecución notamos lo siguiente:
+Ahora si miramos el principio de la ejecución notamos lo siguiente:
 ```
         Nodes                                         Cuts/
    Node  Left     Objective  IInf  Best Integer    Best Bound    ItCnt     Gap
@@ -188,6 +187,7 @@ Elapsed time = 12,47 sec. (6305,57 ticks, tree = 0,02 MB, solutions = 14)
 ```
 
 Con tan solo los primeros 12 segundos de ejecución ya había llegado al menor valor del funcional de 117, con un total de 32744 iteraciones.
+Sin embargo el Gap era de 67.52% (entiendo que porque en comparación con los resultados de 10 minutos más tarde, acá no había recorrido tantas soluciones posibles y determinado tantas cotas superiores como lo hace después).
 
 Además de esto, durante los 10 minutos de ejecución CPLEX hizo varios reinicios, siendo el primero a los 44 segundos aproximadamente:
 ```
@@ -209,7 +209,7 @@ Represolve time = 0,17 sec. (62,37 ticks)
    3460     0       40,3638   772      117,0000     Cuts: 715   845710   62,53%
 ```
 
-Además de estas particularidades, si nos fijamos en el principio del output de Engine Log:
+Además de estas particularidades, si nos fijamos en el header del output de Engine Log:
 ```
 Version identifier: 22.1.1.0 | 2022-11-28 | 9160aff4d
 Legacy callback                                  pi
@@ -234,7 +234,7 @@ Parallel mode: deterministic, using up to 8 threads.
 Root relaxation solution time = 0,17 sec. (155,55 ticks)
 ```
 
-Con esto podemos ratificar que el modelo es mucho más pequeño que aquel sin la limitación de 15 lavados. Nos damos cuenta con la cantidad filas eliminadas por el presolver y también por la cantidad de filas resultantes para el problema reducido (3945 filas).
+Con esto podemos ratificar que el modelo es mucho más pequeño que aquel sin la limitación de 15 lavados. Nos damos cuenta con la cantidad de filas eliminadas por el presolver y también por la cantidad de filas resultantes para el problema reducido (3945 filas).
 
 En cuanto al output del Profiler vemos lo siguiente:
 ![stats](./imagenes/profiler_paso_3.png)
@@ -242,7 +242,13 @@ En cuanto al output del Profiler vemos lo siguiente:
 
 Como observamos, del total del tiempo de ejecución que tomó la optimización, prácticamente todo lo acaparó la resolución por branch & bound, las 2 veces que se intentó.
 
+Si miramos el gráfico de Statistics, podemos notar la evolución de las mejores soluciones contínuas encontradas (en rojo) en comparación con las mejores soluciones enteras (en verde).
+Se puede ver que sus evoluciones son totalmente opuestas, las enteras comienzan arriba bajan abruptamente hasta estabilizarse en cierto nivel. Y las contínuas lo hacen desde el punto más bajo y más progresivamente van mejorando (sin llegar a encontrarse con las enteras).
+
+![stats](./imagenes/grafico_stats_paso_3.png)
+
 ## Paso 4
+
 ## Paso 5
 ## Paso 6
 ## Paso 7

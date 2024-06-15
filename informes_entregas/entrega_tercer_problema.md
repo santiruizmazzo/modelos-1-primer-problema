@@ -1,7 +1,7 @@
 # Informe tercera entrega del TP
 En esta sección se desarrollarán cada uno de los pasos indicados para la tercera entrega del TP.
 
-## Paso 1
+### Paso 1
 Al correr mi heurística sobre este tercer problema, obtuve el siguiente output:
 ```
 $ time ./ejecutar.sh tercer
@@ -25,7 +25,7 @@ sys     0m0,006s
 ```
 Como podemos ver la ejecución del script tardó 0.023s y arrojó un tiempo total de lavado de todas las prendas de 123 (sumatoria de los tiempos de cada lavado formado). Y la cantidad total de lavados armados fue de 11.
 
-## Paso 2
+### Paso 2
 Se corre el modelo de la materia en CPLEX.
 Luego de 10 minutos de ejecución podemos ver que el header del output de la sección Engine Log mostró lo siguiente:
 ```
@@ -111,7 +111,7 @@ Lo interesante está en las tareas que hace dentro de la optimización. Comienza
 Hay un momento que realiza "cortes" al nodo raíz (que entiendo que sería el modelo original del problema), esto consume un 15% del total del tiempo de ejecución.
 También se aplican heurísticas, aunque no se especifiquen cuáles. Y por último vemos que utiliza la técnica de branch & bound para intentar resolver exactamente el problema. Aquí es con lo que se consume el 81% del tiempo total de la ejecución.
 
-## Paso 3
+### Paso 3
 Se ejecutó el modelo de la materia con un pequeño cambio, se limitó el número de lavados máximos a 15 (int limiteColores = 15, en el script), como dice el enunciado.
 Luego de haberlo dejado corriendo por más de 10 minutos, lo aborté y los últimos resultados en Engine Log mostraron:
 ```
@@ -247,7 +247,7 @@ Se puede ver que sus evoluciones son totalmente opuestas, las enteras comienzan 
 
 ![stats](./imagenes/grafico_stats_paso_3.png)
 
-## Paso 4
+### Paso 4
 Lo que primero se puede notar de esta ejecución es que a los 98 segundos frenó su ejecución. Esto lo podemos comprobar en la sección Scripting Log, que es la primera de las ejecuciones en la que aparece un output:
 ```
 solution: 117 /size: 138 /time: 1718470566.830861092
@@ -279,7 +279,7 @@ Es interesante acá que en prácticamente el mismo período de tiempo que en el 
 
 Finalmente si observamos el output de Scripting Log, podemos contar la cantidad de lavados diferentes que se usan en la solución. Con 11 lavados alcanza para agrupar las 138 prendas respetando las incompatibilidades (y eso que la restricción de 15 lavados se quitó para este paso).
 
-## Paso 5
+### Paso 5
 Lo más destacable de este paso es el tiempo en el que se alcanzó la mejor solución entera de 117.
 Para esta ejecución le bastó a CPLEX con 28.5s de tiempo de optimización:
 ![stats](./imagenes/grafico_stats_paso_5.png)
@@ -320,16 +320,21 @@ Elapsed time = 21,17 sec. (9652,52 ticks, tree = 0,02 MB, solutions = 13)
 *  7017   416      integral     0      117,0000      114,3163   358270    2,29%
 ```
 
-## Paso 6
+### Paso 6
 - Primero hay que decir que tanto en el paso 3 como el 5, se limita la cantidad de lavados posibles a 15. Esto indefectiblemente reduce complejidad al problema.
 - El paso 3 contaba con 3945 restricciones y 2085 variables, mientras que el paso 5 con 3962 restricciones y 2085 variables. Esto tiene completo sentido ya que lo único que hacemos en el paso 5 es agregar las restricciones de simetría al modelo.
 - El paso 3 se ejecutó indefinidamente hasta que lo aborté manualmente, en cambio el paso 5 en 28.5s terminó su ejecución. Se puede entender esto por el hecho de que en el paso 3 el espacio de soluciones a explorar está menos reducido que el del 5, y por lo tanto requiere muchas más iteraciones para llegar a una misma mejor solución entera.
 - Otro aspecto interesante a destacar es el gap entre la mejor solución encontrada por el paso 3 (fue de 9.4% al momento de abortarlo) y el gap para la misma solución en el paso 5 (fue de 2.29%). Bastante más cerca estuvo el paso 5 de su solución óptima real que el paso 3.
 
-<!-- "Repetir la prueba sabiendo que existe una solucion de 11 lavados" -->
-<!-- Qué sería repetir la prueba? Ejecutar paso 3 y 5 pero con limiteColores = 11 ? -->
+Luego de comparar los pasos 3 y 5 voy a pasar a realizar la misma comparación pero modificando ambos para que la restricción de lavados posibles sea igual a 11.
 
-## Paso 7
+- Obviamente la mejor solución entera obtenida para los nuevos pasos 3 y 5 se mantuvo igual (117).
+- El nuevo paso 3 cuenta con 2923 restricciones y 1529 variables, mientras que el nuevo paso 5 tiene 2935 y 1529 respectivamente.
+- El nuevo paso 3 se ejecutó indefinidamente hasta que lo aborté manualmente, en cambio el nuevo paso 5 en 11.9s terminó su ejecución.
+- El gap de la mejor solución del nuevo paso 3 fue de 8.55% y el del nuevo paso 5 fue de 2.30%.
+- La primera mejor solución entera obtenida con el nuevo paso 3 y 5 fue de 220.
+
+### Paso 7
 Para la comparación voy a utilizar la solución obtenida del modelo de la materia con un límite de 11 lavados y con las restricciones de simetría descomentadas.
 
 Con mi heurística, para este set de datos obtuve un tiempo total de lavado de 123, distribuído en 11 lavados. En cambio, con el modelo de la materia resuelto con CPLEX obtuve un tiempo total de lavado de 117, distribuído en 11 lavados. Con esta comparación podemos notar la utilidad del uso de heurísticas para el caso de problemas demasiado complejos en los que el tiempo de cómputo es un factor limitante. Con mi heurística tuve un resultado bastante bueno (a 6 del mejor resultado de CPLEX) en tan solo 0.023s. Por más que no sea el resultado óptimo real, se puede considerar un buen resultado para el tiempo en el que lo obtuve.

@@ -275,9 +275,9 @@ Elapsed time = 92,90 sec. (59714,31 ticks, tree = 1,60 MB, solutions = 25)
 Ahora vemos el grafico de evolución de las mejores soluciones (Statistics):
 ![stats](./imagenes/grafico_stats_paso_4.png)
 
-Es interesante acá que en prácticamente el mismo período de tiempo que en el paso 3, acá las soluciones enteras y contínuas están mucho más cerca (casi convergen entre sí).
+Es interesante que acá en prácticamente el mismo período de tiempo que en el paso 3, las soluciones enteras y contínuas están mucho más cerca (casi convergen entre sí).
 
-Finalmente si observamos el output de Scripting Log, podemos contar la cantidad de lavados diferentes que se usan en la solución. Con 11 lavados alcanza para agrupar las 138 prendas respetando las incompatibilidades (y eso que la restricción de 15 lavados se quitó para este paso).
+Finalmente, si observamos el output de Scripting Log, podemos contar la cantidad de lavados diferentes que se usan en la solución. Con 11 lavados alcanza para agrupar las 138 prendas respetando las incompatibilidades (y eso que la restricción de 15 lavados se quitó para este paso).
 
 ### Paso 5
 Lo más destacable de este paso es el tiempo en el que se alcanzó la mejor solución entera de 117.

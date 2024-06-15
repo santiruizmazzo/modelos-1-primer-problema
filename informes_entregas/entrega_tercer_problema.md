@@ -1,4 +1,4 @@
-# Informe tercera entrega del TP
+# Informe tercera entrega del TP (Santiago Ruiz Mazzocato - 105915)
 En esta sección se desarrollarán cada uno de los pasos indicados para la tercera entrega del TP.
 
 ### Paso 1

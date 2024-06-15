@@ -23,7 +23,7 @@ real    0m0,023s
 user    0m0,017s
 sys     0m0,006s
 ```
-Como podemos ver la ejecución del script tardó 0.023 segundos y arrojó un tiempo total de lavado de todas las prendas de 123 (sumatoria de los tiempos de cada lavado formado). Y la cantidad total de lavados armados fue de 11.
+Como podemos ver la ejecución del script tardó 0.023s y arrojó un tiempo total de lavado de todas las prendas de 123 (sumatoria de los tiempos de cada lavado formado). Y la cantidad total de lavados armados fue de 11.
 
 ## Paso 2
 Se corre el modelo de la materia en CPLEX.
@@ -326,6 +326,12 @@ Elapsed time = 21,17 sec. (9652,52 ticks, tree = 0,02 MB, solutions = 13)
 - El paso 3 se ejecutó indefinidamente hasta que lo aborté manualmente, en cambio el paso 5 en 28.5s terminó su ejecución. Se puede entender esto por el hecho de que en el paso 3 el espacio de soluciones a explorar está menos reducido que el del 5, y por lo tanto requiere muchas más iteraciones para llegar a una misma mejor solución entera.
 - Otro aspecto interesante a destacar es el gap entre la mejor solución encontrada por el paso 3 (fue de 9.4% al momento de abortarlo) y el gap para la misma solución en el paso 5 (fue de 2.29%). Bastante más cerca estuvo el paso 5 de su solución óptima real que el paso 3.
 
+<!-- "Repetir la prueba sabiendo que existe una solucion de 11 lavados" -->
+<!-- Qué sería repetir la prueba? Ejecutar paso 3 y 5 pero con limiteColores = 11 ? -->
+
 ## Paso 7
+Para la comparación voy a utilizar la solución obtenida del modelo de la materia con un límite de 11 lavados y con las restricciones de simetría descomentadas.
+
+Con mi heurística, para este set de datos obtuve un tiempo total de lavado de 123, distribuído en 11 lavados. En cambio, con el modelo de la materia resuelto con CPLEX obtuve un tiempo total de lavado de 117, distribuído en 11 lavados. Con esta comparación podemos notar la utilidad del uso de heurísticas para el caso de problemas demasiado complejos en los que el tiempo de cómputo es un factor limitante. Con mi heurística tuve un resultado bastante bueno (a 6 del mejor resultado de CPLEX) en tan solo 0.023s. Por más que no sea el resultado óptimo real, se puede considerar un buen resultado para el tiempo en el que lo obtuve.
 
 # Informe final del TP

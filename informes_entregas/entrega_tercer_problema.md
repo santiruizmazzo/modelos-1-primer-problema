@@ -126,7 +126,7 @@ Elapsed time = 689,18 sec. (303437,20 ticks, tree = 1578,41 MB, solutions = 14)
  134007 53704      109,0000   343      117,0000      106,0000 14306802    9,40%
 ```
 
-Como vemos luego de correr durante 689.18 segundos el menor tiempo total de lavado (Best Integer) fue de 117, habiendo realizado más de 14 millones de iteraciones. Viendo el resultado de la columna Gap podemos darnos cuenta que gracias a este límite de lavados (o colores) que impusimos, CPLEX pudo llegar a una solución entera mejor que la anterior en más o menos el mismo tiempo (sabiendo que ninguna de las dos ejecuciones terminaron por sí solas). Lo interesante es que aunque la mejor solución entera encontrada haya mejorado en 2, comparando con la del paso 2, la columna Gap nos dice que ahora está mucho más cerca del óptimo real que antes.
+Como vemos luego de correr durante 689.18 segundos el menor tiempo total de lavado (Best Integer) fue de 117, habiendo realizado más de 14 millones de iteraciones. Viendo el resultado de la columna Gap podemos darnos cuenta que gracias a este límite de lavados (o colores) que impusimos, CPLEX pudo llegar a una solución entera mejor que la anterior en más o menos el mismo tiempo (sabiendo que ninguna de las dos ejecuciones terminaron por sí solas). Lo interesante es que aunque la mejor solución entera encontrada haya mejorado solamente en 2, comparando con la del paso 2, la columna Gap nos dice que ahora está mucho más cerca del óptimo real que antes.
 
 Ahora si miramos el principio de la ejecución notamos lo siguiente:
 ```
@@ -186,7 +186,7 @@ Elapsed time = 12,47 sec. (6305,57 ticks, tree = 0,02 MB, solutions = 14)
       2     4       51,0000   559      117,0000       38,0000    32744   67,52%
 ```
 
-Con tan solo los primeros 12 segundos de ejecución ya había llegado al menor valor del funcional de 117, con un total de 32744 iteraciones.
+Con tan solo los primeros 12 segundos de ejecución ya había llegado al menor valor del funcional de 117, con un total de 32744 iteraciones. Esto, en parte, se puede explicar porque ya la primera mejor solución entera encontrada fue de 300, muchísimo mejor que la del paso 2 (que era 2760).
 Sin embargo el Gap era de 67.52% (entiendo que porque en comparación con los resultados de 10 minutos más tarde, acá no había recorrido tantas soluciones posibles y determinado tantas cotas superiores como lo hace después).
 
 Además de esto, durante los 10 minutos de ejecución CPLEX hizo varios reinicios, siendo el primero a los 44 segundos aproximadamente:
@@ -234,7 +234,7 @@ Parallel mode: deterministic, using up to 8 threads.
 Root relaxation solution time = 0,17 sec. (155,55 ticks)
 ```
 
-Con esto podemos ratificar que el modelo es mucho más pequeño que aquel sin la limitación de 15 lavados. Nos damos cuenta con la cantidad de filas eliminadas por el presolver y también por la cantidad de filas resultantes para el problema reducido (3945 filas).
+Con esto podemos ratificar que el modelo es mucho más pequeño que aquel sin la limitación de 15 lavados. Nos damos cuenta de esto con la cantidad de filas eliminadas por el presolver y también por la cantidad de filas resultantes para el problema reducido (3945 filas).
 
 En cuanto al output del Profiler vemos lo siguiente:
 ![stats](./imagenes/profiler_paso_3.png)
@@ -243,7 +243,7 @@ En cuanto al output del Profiler vemos lo siguiente:
 Como observamos, del total del tiempo de ejecución que tomó la optimización, prácticamente todo lo acaparó la resolución por branch & bound, las 2 veces que se intentó.
 
 Si miramos el gráfico de Statistics, podemos notar la evolución de las mejores soluciones contínuas encontradas (en rojo) en comparación con las mejores soluciones enteras (en verde).
-Se puede ver que sus evoluciones son totalmente opuestas, las enteras comienzan arriba bajan abruptamente hasta estabilizarse en cierto nivel. Y las contínuas lo hacen desde el punto más bajo y más progresivamente van mejorando (sin llegar a encontrarse con las enteras).
+Se puede ver que sus evoluciones son totalmente opuestas, las enteras comienzan arriba y bajan abruptamente hasta estabilizarse en cierto nivel. Y las contínuas lo hacen desde el punto más bajo y más progresivamente van mejorando (sin llegar a encontrarse con las enteras).
 
 ![stats](./imagenes/grafico_stats_paso_3.png)
 
@@ -260,7 +260,7 @@ Nodo 6: 5
 ...
 ```
 
-Como vemos se logea que la mejor solución entera encontrada fue 117, con un tamaño inicial de 138 (prendas en este caso). Además vemos a qué lavado corresponde cada prenda de la solución (con qué color se pintó cada nodo).
+Como vemos, se logea que la mejor solución entera encontrada fue 117, con un tamaño inicial de 138 (prendas en este caso). Además vemos a qué lavado corresponde cada prenda de la solución (con qué color se pintó cada nodo).
 
 Si chequeamos la parte final de Engine Log vemos que llegamos a la solución de 117 pero ahora con un gap de 8.37%, que es incluso un poco más bajo que el del paso 3 (9.40%).
 ```
@@ -275,12 +275,57 @@ Elapsed time = 92,90 sec. (59714,31 ticks, tree = 1,60 MB, solutions = 25)
 Ahora vemos el grafico de evolución de las mejores soluciones (Statistics):
 ![stats](./imagenes/grafico_stats_paso_4.png)
 
-Es interesante acá que en prácticamente el mismo período de tiempo que en el paso 3, acá las soluciones enteras y contínuas están muy cerca (casi convergen entre sí).
+Es interesante acá que en prácticamente el mismo período de tiempo que en el paso 3, acá las soluciones enteras y contínuas están mucho más cerca (casi convergen entre sí).
 
 Finalmente si observamos el output de Scripting Log, podemos contar la cantidad de lavados diferentes que se usan en la solución. Con 11 lavados alcanza para agrupar las 138 prendas respetando las incompatibilidades (y eso que la restricción de 15 lavados se quitó para este paso).
 
 ## Paso 5
+Lo más destacable de este paso es el tiempo en el que se alcanzó la mejor solución entera de 117.
+Para esta ejecución le bastó a CPLEX con 28.5s de tiempo de optimización:
+![stats](./imagenes/grafico_stats_paso_5.png)
+
+Si chequeamos el header de Engine Log notamos que el problema reducido tiene 3962 filas (restricciones) y 2085 columnas (variables):
+```
+Version identifier: 22.1.1.0 | 2022-11-28 | 9160aff4d
+Legacy callback                                  pi
+Tried aggregator 1 time.
+MIP Presolve eliminated 13050 rows and 0 columns.
+MIP Presolve modified 1350 coefficients.
+Reduced MIP has 3962 rows, 2085 columns, and 13578 nonzeros.
+Reduced MIP has 2070 binaries, 15 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0,04 sec. (23,33 ticks)
+Found incumbent of value 300,000000 after 0,08 sec. (53,08 ticks)
+Probing time = 0,02 sec. (4,05 ticks)
+Tried aggregator 1 time.
+Detecting symmetries...
+Reduced MIP has 3962 rows, 2085 columns, and 13578 nonzeros.
+Reduced MIP has 2070 binaries, 15 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0,01 sec. (12,66 ticks)
+Probing time = 0,02 sec. (4,28 ticks)
+Clique table members: 1878.
+MIP emphasis: balance optimality and feasibility.
+MIP search method: dynamic search.
+Parallel mode: deterministic, using up to 8 threads.
+Root relaxation solution time = 0,17 sec. (126,25 ticks)
+```
+
+Y si verificamos el final del output de Engine Log, notamos que el gap entre la solución encontrada y el óptimo real cayó al 2.29% (cada vez nos acercamos más):
+```
+   3445     0       91,4634   318      118,0000     Cuts: 192   243951   19,07%
+   3445     2       91,4634   297      118,0000       95,4975   243953   19,07%
+   3469     7        cutoff            118,0000       95,4975   249769   19,07%
+Elapsed time = 21,17 sec. (9652,52 ticks, tree = 0,02 MB, solutions = 13)
+   3753    62      112,0000   183      118,0000       95,4975   264961   19,07%
+   5048   322      112,4348   211      118,0000       96,4398   305126   18,27%
+*  7017   416      integral     0      117,0000      114,3163   358270    2,29%
+```
+
 ## Paso 6
+- Primero hay que decir que tanto en el paso 3 como el 5, se limita la cantidad de lavados posibles a 15. Esto indefectiblemente reduce complejidad al problema.
+- El paso 3 contaba con 3945 restricciones y 2085 variables, mientras que el paso 5 con 3962 restricciones y 2085 variables. Esto tiene completo sentido ya que lo único que hacemos en el paso 5 es agregar las restricciones de simetría al modelo.
+- El paso 3 se ejecutó indefinidamente hasta que lo aborté manualmente, en cambio el paso 5 en 28.5s terminó su ejecución. Se puede entender esto por el hecho de que en el paso 3 el espacio de soluciones a explorar está menos reducido que el del 5, y por lo tanto requiere muchas más iteraciones para llegar a una misma mejor solución entera.
+- Otro aspecto interesante a destacar es el gap entre la mejor solución encontrada por el paso 3 (fue de 9.4% al momento de abortarlo) y el gap para la misma solución en el paso 5 (fue de 2.29%). Bastante más cerca estuvo el paso 5 de su solución óptima real que el paso 3.
+
 ## Paso 7
 
 # Informe final del TP

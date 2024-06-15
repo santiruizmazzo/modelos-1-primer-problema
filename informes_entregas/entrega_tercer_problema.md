@@ -248,6 +248,36 @@ Se puede ver que sus evoluciones son totalmente opuestas, las enteras comienzan 
 ![stats](./imagenes/grafico_stats_paso_3.png)
 
 ## Paso 4
+Lo que primero se puede notar de esta ejecución es que a los 98 segundos frenó su ejecución. Esto lo podemos comprobar en la sección Scripting Log, que es la primera de las ejecuciones en la que aparece un output:
+```
+solution: 117 /size: 138 /time: 1718470566.830861092
+Nodo 1: 1
+Nodo 2: 1
+Nodo 3: 1
+Nodo 4: 1
+Nodo 5: 1
+Nodo 6: 5
+...
+```
+
+Como vemos se logea que la mejor solución entera encontrada fue 117, con un tamaño inicial de 138 (prendas en este caso). Además vemos a qué lavado corresponde cada prenda de la solución (con qué color se pintó cada nodo).
+
+Si chequeamos la parte final de Engine Log vemos que llegamos a la solución de 117 pero ahora con un gap de 8.37%, que es incluso un poco más bajo que el del paso 3 (9.40%).
+```
+                                          ...
+   6051   467       92,8716   289      117,0000      106,6080   353187    8,88%
+   6572   814      111,0000   127      117,0000      106,6080   417941    8,88%
+Elapsed time = 92,90 sec. (59714,31 ticks, tree = 1,60 MB, solutions = 25)
+   7404   823       99,8906   212      117,0000      106,6080   487667    8,88%
+   8718   689        cutoff            117,0000      107,2105   559601    8,37%
+```
+
+Ahora vemos el grafico de evolución de las mejores soluciones (Statistics):
+![stats](./imagenes/grafico_stats_paso_4.png)
+
+Es interesante acá que en prácticamente el mismo período de tiempo que en el paso 3, acá las soluciones enteras y contínuas están muy cerca (casi convergen entre sí).
+
+Finalmente si observamos el output de Scripting Log, podemos contar la cantidad de lavados diferentes que se usan en la solución. Con 11 lavados alcanza para agrupar las 138 prendas respetando las incompatibilidades (y eso que la restricción de 15 lavados se quitó para este paso).
 
 ## Paso 5
 ## Paso 6
